@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\FoldersController;
 use App\Http\Controllers\SitesController;
-use App\Http\Controllers\UploadSiteImageController;
+use App\Http\Controllers\SiteImageController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,4 +21,4 @@ Route::resource('folders', FoldersController::class)->only('index', 'store', 'up
 Route::patch('folder-sorts', [FoldersController::class, 'updateFolderSorts']);
 Route::resource('sites', SitesController::class)->only('store', 'update', 'destroy');
 Route::patch('site-sorts', [SitesController::class, 'updateSiteSorts']);
-Route::resource('upload-site-image', UploadSiteImageController::class)->only('store');
+Route::resource('site-image', SiteImageController::class)->only('store', 'show');

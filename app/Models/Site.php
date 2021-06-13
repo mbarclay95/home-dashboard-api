@@ -54,6 +54,6 @@ class Site extends Model
             return '';
         }
 
-        return Storage::disk('s3')->url($this->s3_path);
+        return route('site-image.show', $this->id);
     }
 }

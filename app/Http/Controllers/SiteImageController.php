@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Site;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class UploadSiteImageController extends Controller
+class SiteImageController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -36,12 +39,20 @@ class UploadSiteImageController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $siteId
+     * @return StreamedResponse
+     * @throws FileNotFoundException
      */
-    public function show($id)
+    public function show(int $siteId): StreamedResponse
     {
-        //
+        /** @var Site $site */
+        $site = Site::query()->find($siteId);
+
+        $file = Storage::disk('s3')->get($site->s3_path);
+
+        return response()->stream(function () use ($file) {
+            echo $file;
+        }, 200, ['Content-Type' => 'image/png']);
     }
 
     /**
