@@ -69,8 +69,9 @@ class SitesController extends Controller
         $site->show = $request->post('show');
         $site->description = $request->post('description');
         $site->url = $request->post('url');
-        if ($request->post('s3_path')) {
-            $site->s3_path = $request->post('s3_path');
+        $site->folder()->associate($request->post('folderId'));
+        if ($request->post('s3Path')) {
+            $site->s3_path = $request->post('s3Path');
         }
         $site->save();
 
