@@ -12,6 +12,7 @@ FROM develop as production
 
 COPY composer.json composer.json
 COPY composer.lock composer.lock
+RUN composer install --prefer-dist --no-scripts --no-dev --no-autoloader && rm -rf /root/.composer
 
 COPY --chown=application:application ./app /var/www/html/app
 COPY --chown=application:application ./bootstrap/app.php /var/www/html/bootstrap/app.php
