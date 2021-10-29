@@ -35,9 +35,11 @@ class SitesController extends Controller
             'name' => $request->post('name'),
             'description' => $request->post('description'),
             'show' => true,
-            's3_path' => $request->post('s3Path'),
             'url' => $request->post('url')
         ]);
+        if ($request->post('siteImage')) {
+            $site->siteImage()->associate($request->post('siteImage')['id']);
+        }
         $site->folder()->associate($request->post('folderId'));
         $site->user()->associate(1);
         $site->save();
@@ -70,8 +72,8 @@ class SitesController extends Controller
         $site->description = $request->post('description');
         $site->url = $request->post('url');
         $site->folder()->associate($request->post('folderId'));
-        if ($request->post('s3Path')) {
-            $site->s3_path = $request->post('s3Path');
+        if ($request->post('siteImage') && $request->post('siteImage')['id']) {
+            $site->siteImage()->associate($request->post('siteImage')['id']);
         }
         $site->save();
 

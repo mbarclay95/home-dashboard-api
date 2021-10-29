@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * Class Site
@@ -22,10 +21,12 @@ use Illuminate\Support\Facades\Storage;
  * @property string description
  * @property boolean show
  * @property string url
- * @property string s3_path
  *
  * @property integer folder_id
  * @property Folder folder
+ *
+ * @property integer site_image_id
+ * @property SiteImage siteImage
  *
  * @property integer user_id
  * @property User user
@@ -36,24 +37,20 @@ class Site extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['sort', 'name', 'description', 'show', 's3_path', 'url'];
+    protected $fillable = ['sort', 'name', 'description', 'show', 'url'];
 
     public function folder(): BelongsTo
     {
         return $this->belongsTo(Folder::class);
     }
 
+    public function siteImage(): BelongsTo
+    {
+        return $this->belongsTo(SiteImage::class);
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function getImagePath(): string
-    {
-        if (!isset($this->s3_path)) {
-            return '';
-        }
-
-        return route('site-image.show', $this->id);
     }
 }

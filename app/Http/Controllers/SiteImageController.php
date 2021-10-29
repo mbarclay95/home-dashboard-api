@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ApiModels\SiteImageApiModel;
 use App\Models\Site;
+use App\Models\SiteImage;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -33,22 +35,26 @@ class SiteImageController extends Controller
         $file = $request->file('file');
         $path = Storage::disk('s3')->put('site-images', $file);
 
-        return new JsonResponse(['imagePath' => $path]);
+        $siteImage = new SiteImage([
+            's3_path' => $path,
+            'original_file_name' => $file->getClientOriginalName()
+        ]);
+        $siteImage->user()->associate(1);
+        $siteImage->save();
+
+        return new JsonResponse(SiteImageApiModel::fromEntity($siteImage));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param int $siteId
+     * @param SiteImage $siteImage
      * @return StreamedResponse
      * @throws FileNotFoundException
      */
-    public function show(int $siteId): StreamedResponse
+    public function show(SiteImage $siteImage): StreamedResponse
     {
-        /** @var Site $site */
-        $site = Site::query()->find($siteId);
-
-        $file = Storage::disk('s3')->get($site->s3_path);
+        $file = Storage::disk('s3')->get($siteImage->s3_path);
 
         return response()->stream(function () use ($file) {
             echo $file;

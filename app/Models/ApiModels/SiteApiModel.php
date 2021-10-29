@@ -4,6 +4,7 @@ namespace App\Models\ApiModels;
 
 use App\Models\Folder;
 use App\Models\Site;
+use App\Models\SiteImage;
 use Carbon\Carbon;
 
 class SiteApiModel
@@ -32,11 +33,11 @@ class SiteApiModel
     /** @var string */
     public $url;
 
-    /** @var string */
-    public $imagePath;
-
     /** @var integer */
     public $folderId;
+
+    /** @var SiteImage */
+    public $siteImage;
 
     /**
      * @param Site $entity
@@ -54,7 +55,7 @@ class SiteApiModel
         $apiModel->sort = $entity->sort;
         $apiModel->show = $entity->show;
         $apiModel->url = $entity->url;
-        $apiModel->imagePath = $entity->getImagePath();
+        $apiModel->siteImage = $entity->siteImage ? SiteImageApiModel::fromEntity($entity->siteImage) : null;
         $apiModel->folderId = $entity->folder_id;
 
         return $apiModel;
