@@ -1,4 +1,4 @@
-FROM webdevops/php-nginx:7.3 as develop
+FROM webdevops/php-nginx:7.4 as develop
 
 ARG env=dev
 
@@ -12,7 +12,6 @@ FROM develop as production
 
 COPY composer.json composer.json
 COPY composer.lock composer.lock
-RUN composer install --prefer-dist --no-scripts --no-dev --no-autoloader && rm -rf /root/.composer
 
 COPY --chown=application:application ./app /var/www/html/app
 COPY --chown=application:application ./bootstrap/app.php /var/www/html/bootstrap/app.php
